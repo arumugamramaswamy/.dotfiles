@@ -1,0 +1,4 @@
+[[language]]
+name = "python"
+formatter = { command = "black", args = ["--quiet", "-"] } # , "--line-length=79"
+auto-format = false

@@ -1,0 +1,25 @@
+theme = "gruvbox_dark_hard"
+
+[editor]
+idle-timeout=0
+rulers=[80, 100]
+true-color=true
+line-number="relative"
+
+[editor.cursor-shape]
+insert = "bar"
+
+[editor.statusline]
+mode.normal = "N"
+mode.insert = "I"
+mode.select = "S"
+
+[editor.lsp]
+display-messages = true
+
+[editor.indent-guides]
+render = true
+
+[keys.insert]
+
+C-g = "normal_mode"
