@@ -1,0 +1,15 @@
+[[verbs]]
+invocation = "edit"
+key = "Ctrl-e"
+shortcut = "e"
+execution = "$EDITOR {file}"
+leave_broot = false
+
+[[verbs]]
+key = "Ctrl-j"
+execution = ":line_down"
+
+[[verbs]]
+key = "Ctrl-k"
+execution = ":line_up"
+
