@@ -1,0 +1,28 @@
+#! /bin/sh
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+xmodmap ~/.Xmodmap
+
+if xrandr -q | grep -q 'HDMI.* connected'; then
+  bspc wm -O edp $(xrandr -q | grep -oP "HDMI.*?")
+  bspc monitor ^1 -d 1 2 3 4 5
+  bspc monitor ^2 -d 6 7 8 9 0
+  sh ~/.screenlayout/vert.sh
+else
+  bspc monitor ^1 -d 1 2 3 4 5 6 7 8 9 0
+fi
+
+bspc config border_width         2
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   false
+bspc config gapless_monocle      true
+
+bspc rule -a firefox desktop='^6'
+
+picom -b
+sh ~/.config/polybar/launch.sh
+wal -i ~/.config/bspwm/wallpaper
+
