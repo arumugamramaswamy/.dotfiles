@@ -21,8 +21,10 @@ bspc config borderless_monocle   false
 bspc config gapless_monocle      true
 
 bspc rule -a firefox desktop='^6'
+bspc rule -a discord desktop="^4"
 
 picom -b
 sh ~/.config/polybar/launch.sh
+feh --bg-fill ~/.config/bswpm/wallpaper
 wal -i ~/.config/bspwm/wallpaper
 
