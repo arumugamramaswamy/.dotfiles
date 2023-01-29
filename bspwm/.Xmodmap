@@ -1,0 +1,13 @@
+clear lock
+clear control
+
+! make Capslock -> right hyper, set Right hyper to represent control
+keycode 66 = Hyper_R
+add control = Hyper_R
+
+! set right ctrl to represent capslock
+add Lock = Control_R
+
+! set left ctrl to represent mod4 -> winkey
+add mod4 = Control_L
+

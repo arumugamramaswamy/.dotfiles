@@ -5,7 +5,7 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 xmodmap ~/.Xmodmap
 
 if xrandr -q | grep -q 'HDMI.* connected'; then
-  bspc wm -O edp $(xrandr -q | grep -oP "HDMI.*?")
+  bspc wm -O eDP $(xrandr -q | grep -oP "HDMI.*? ")
   bspc monitor ^1 -d 1 2 3 4 5
   bspc monitor ^2 -d 6 7 8 9 0
   sh ~/.screenlayout/vert.sh
