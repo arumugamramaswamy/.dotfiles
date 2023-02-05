@@ -8,8 +8,9 @@ if xrandr -q | grep -q 'HDMI.* connected'; then
   bspc wm -O eDP $(xrandr -q | grep -oP "HDMI.*? ")
   bspc monitor ^1 -d 1 2 3 4 5
   bspc monitor ^2 -d 6 7 8 9 0
-  sh ~/.screenlayout/vert.sh
+  sh ~/.screenlayout/left.sh
 else
+  bspc wm -O eDP
   bspc monitor ^1 -d 1 2 3 4 5 6 7 8 9 0
 fi
 
@@ -20,8 +21,9 @@ bspc config split_ratio          0.52
 bspc config borderless_monocle   false
 bspc config gapless_monocle      true
 
-bspc rule -a firefox desktop='^6'
-bspc rule -a discord desktop="^4"
+bspc rule -a firefox desktop='6'
+bspc rule -a qutebrowser desktop='6'
+bspc rule -a discord desktop="4"
 
 picom -b
 sh ~/.config/polybar/launch.sh
