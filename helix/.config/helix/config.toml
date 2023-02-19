@@ -23,3 +23,6 @@ render = true
 [keys.insert]
 
 C-g = "normal_mode"
+
+[keys.normal]
+C-f = ":pipe xargs -0 black -c $1"

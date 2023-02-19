@@ -1,3 +1,5 @@
+default_flags = "g"
+
 [[verbs]]
 invocation = "edit"
 key = "Ctrl-e"
@@ -13,3 +15,7 @@ execution = ":line_down"
 key = "Ctrl-k"
 execution = ":line_up"
 
+[[verbs]]
+invocation = "touch {filename}"
+execution = "touch {directory}/{filename}"
+leave_broot = false

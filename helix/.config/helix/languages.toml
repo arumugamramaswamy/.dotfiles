@@ -1,5 +1,5 @@
 [[language]]
 name = "python"
 formatter = { command = "black", args = ["--quiet", "-"] } # , "--line-length=79"
-auto-format = false
-config = { pylsp.plugins.rope_autoimport.enabled = true, pylsp.plugins.pylint.enabled = true }
+auto-format = true
+config = { pylsp.plugins.rope_autoimport.enabled = false, pylsp.plugins.pylint.enabled = false }
