@@ -11,7 +11,7 @@ super + @space
 	rofi -show run
 
 # program launcher
-super + k
+super + ctrl + k
 	rofi -show window
 
 # make sxhkd reload its configuration files:
@@ -83,9 +83,8 @@ super + {p,b,comma,period}
 super + {_,shift + }c
 	bspc node -f {next,prev}.local.!hidden.window
 
-# focus the next/previous desktop in the current monitor
 super + bracket{left,right}
-	bspc desktop -f {prev,next}.local
+	bspc desktop --to-monitor {prev,next} --follow
 
 # focus the last node/desktop
 super + {grave,Tab}
