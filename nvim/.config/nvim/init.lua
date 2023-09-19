@@ -70,7 +70,7 @@ require('lazy').setup({
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
-  'nvim-treesitter/nvim-treesitter-context',
+  'wellle/context.vim',
   {
     'vimwiki/vimwiki',
     init = function()
@@ -327,11 +327,12 @@ require('telescope').setup {
         ['<C-d>'] = false,
       },
     },
-  },
-  pickers = {
-    current_buffer_fuzzy_find = {
-      theme = "ivy",
-    }
+    layout_strategy = 'vertical',
+    layout_config = {
+      height = vim.o.lines,
+      width = vim.o.columns,
+      prompt_position = "bottom",
+    },
   },
 }
 
@@ -341,15 +342,6 @@ pcall(require('telescope').load_extension, 'fzf')
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
-end, { desc = '[/] Fuzzily search in current buffer' })
-
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -453,7 +445,6 @@ local on_attach = function(_, bufnr)
   nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
@@ -461,11 +452,6 @@ local on_attach = function(_, bufnr)
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
@@ -570,25 +556,46 @@ cmp.setup {
   },
 }
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
---
 -- Emacs like hotkeys
 vim.keymap.set('n', '<C-x><C-f>', vim.cmd.Ex, { desc = 'Open Explorer' })
 vim.keymap.set({'v', 'i'}, '<C-g>', '<Esc>')
 vim.keymap.set('n', '<C-s>', require('telescope.builtin').current_buffer_fuzzy_find)
-
--- Helix like movements
-vim.keymap.set('n', 'ge', 'G')
-vim.keymap.set('n', 'gl', '$')
-vim.keymap.set('n', 'gh', '_')
-
--- Helix like global clipboard management
-vim.keymap.set('n', '<leader>p', '"+p')
-vim.keymap.set('n', '<leader>y', '"+y')
-
--- git config
-vim.keymap.set('n', '<leader>gg', vim.cmd.Git)
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
 
-vim.keymap.set('n', '<leader>ls', require('aerial').toggle)
+local wk = require("which-key")
+
+wk.register({
+  p = {'"+p', "[p]aste from global clipboard" },
+  y = {'"+y', "[y]ank to global clipboard" },
+
+  f = {
+    name = "find",
+    f = { "<cmd>Telescope find_files<cr>", "find file" },
+    s = { "<cmd>Telescope live_grep<cr>", "find string" },
+  },
+
+  -- lsp related key bindings
+  l = {
+    name = "lsp",
+    o = { require("aerial").toggle, "Toggle [O]utline" },
+    s = { require('telescope.builtin').lsp_document_symbols, "Search document [S]ymbols" },
+    w = { require('telescope.builtin').lsp_dynamic_workspace_symbols, "Search [W]orkspace symbols" },
+  },
+
+  -- git related key bindings
+  g = {
+    name = "git",
+    g = { "<cmd> Git <cr>", "[G]it"},
+    f = {require('telescope.builtin').git_files, 'Search git [F]iles' },
+    s = {require('telescope.builtin').git_status, 'Search git [S]tatus' },
+  },
+
+  -- wiki related key bindings
+  {
+    w = {
+      name = "wiki",
+      ["<space>"] = {name = "Diary note"}
+    }
+  },
+
+}, { prefix = "<leader>" })
