@@ -586,6 +586,7 @@ wk.register({
   g = {
     name = "git",
     g = { "<cmd> Git <cr>", "[G]it"},
+    b = { "<cmd> Git blame <cr>", "git [B]lame"},
     f = {require('telescope.builtin').git_files, 'Search git [F]iles' },
     s = {require('telescope.builtin').git_status, 'Search git [S]tatus' },
   },
