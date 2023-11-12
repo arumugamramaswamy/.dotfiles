@@ -98,6 +98,9 @@ require('lazy').setup({
     },
   },
   {
+    "github/copilot.vim"
+  },
+  {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
@@ -201,10 +204,6 @@ require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
-    opts = {
-      char = '┊',
-      show_trailing_blankline_indent = false,
-    },
   },
 
   -- "gc" to comment visual regions/lines
@@ -471,7 +470,11 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {
+    settings = {
+      ['rust-analyzer'] = {},
+    },
+  },
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -561,6 +564,7 @@ vim.keymap.set('n', '<C-x><C-f>', vim.cmd.Ex, { desc = 'Open Explorer' })
 vim.keymap.set({'v', 'i'}, '<C-g>', '<Esc>')
 vim.keymap.set('n', '<C-s>', require('telescope.builtin').current_buffer_fuzzy_find)
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
+vim.keymap.set('n', '<C-space>', "<Plug>VimwikiToggleListItem")
 
 local wk = require("which-key")
 
@@ -580,6 +584,7 @@ wk.register({
     o = { require("aerial").toggle, "Toggle [O]utline" },
     s = { require('telescope.builtin').lsp_document_symbols, "Search document [S]ymbols" },
     w = { require('telescope.builtin').lsp_dynamic_workspace_symbols, "Search [W]orkspace symbols" },
+    i = { function () vim.lsp.inlay_hint(0, nil) end, "toggle [i]nlay hints"}
   },
 
   -- git related key bindings
@@ -598,5 +603,8 @@ wk.register({
       ["<space>"] = {name = "Diary note"}
     }
   },
+  {
+    c = { require('telescope.builtin').commands, "Search [C]ommands" },
+  }
 
 }, { prefix = "<leader>" })
