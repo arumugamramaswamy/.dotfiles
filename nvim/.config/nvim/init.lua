@@ -484,6 +484,19 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+  pylsp = {
+    pylsp = {
+        plugins = {
+          pycodestyle = {
+            maxLineLength = 88
+          },
+          pylint = {
+            enabled = false,
+            executable = '/home/dev/python-venv/bin/pylint'
+          }
+        }
+    }
+  },
 }
 
 -- Setup neovim lua configuration
@@ -566,6 +579,9 @@ vim.keymap.set('n', '<C-s>', require('telescope.builtin').current_buffer_fuzzy_f
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
 vim.keymap.set('n', '<C-space>', "<Plug>VimwikiToggleListItem")
 
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+
 local wk = require("which-key")
 
 wk.register({
@@ -605,6 +621,9 @@ wk.register({
   },
   {
     c = { require('telescope.builtin').commands, "Search [C]ommands" },
+  },
+  d = {
+    d = { "<cmd> lua vim.diagnostic.open_float() <CR>", "?   toggles local troubleshoot" }
   }
 
 }, { prefix = "<leader>" })
