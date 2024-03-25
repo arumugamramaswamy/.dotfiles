@@ -84,33 +84,30 @@ require('lazy').setup({
     end
   },
   {
-      'windwp/nvim-autopairs',
-      event = "InsertEnter",
-      opts = {} -- this is equalent to setup({}) function
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
   },
   {
     'stevearc/aerial.nvim',
     opts = {},
     -- Optional dependencies
     dependencies = {
-       "nvim-treesitter/nvim-treesitter",
-       "nvim-tree/nvim-web-devicons"
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons"
     },
-  },
-  {
-    "github/copilot.vim"
   },
   {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
     config = function()
       require("chatgpt").setup({
-          edit_with_instructions = {
-            keymaps = {
-              use_output_as_input = "<C-e>",
-            },
+        edit_with_instructions = {
+          keymaps = {
+            use_output_as_input = "<C-e>",
           },
-        }
+        },
+      }
       )
     end,
     dependencies = {
@@ -121,6 +118,12 @@ require('lazy').setup({
   },
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
+
+  -- Knowledge management
+  {
+    'renerocksai/telekasten.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' }
+  },
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -134,7 +137,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -158,7 +161,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -242,7 +245,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -486,15 +489,15 @@ local servers = {
   },
   pylsp = {
     pylsp = {
-        plugins = {
-          pycodestyle = {
-            maxLineLength = 88
-          },
-          pylint = {
-            enabled = false,
-            executable = '/home/dev/python-venv/bin/pylint'
-          }
+      plugins = {
+        pycodestyle = {
+          maxLineLength = 88
+        },
+        pylint = {
+          enabled = false,
+          executable = '/home/dev/python-venv/bin/pylint'
         }
+      }
     }
   },
 }
@@ -574,7 +577,7 @@ cmp.setup {
 
 -- Emacs like hotkeys
 vim.keymap.set('n', '<C-x><C-f>', vim.cmd.Ex, { desc = 'Open Explorer' })
-vim.keymap.set({'v', 'i'}, '<C-g>', '<Esc>')
+vim.keymap.set({ 'v', 'i' }, '<C-g>', '<Esc>')
 vim.keymap.set('n', '<C-s>', require('telescope.builtin').current_buffer_fuzzy_find)
 vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help)
 vim.keymap.set('n', '<C-space>', "<Plug>VimwikiToggleListItem")
@@ -582,11 +585,15 @@ vim.keymap.set('n', '<C-space>', "<Plug>VimwikiToggleListItem")
 vim.g.copilot_no_tab_map = true
 vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 
+require('telekasten').setup({
+  home = vim.fn.expand("~/zettelkasten"), -- Put the name of your notes directory here
+})
+
 local wk = require("which-key")
 
 wk.register({
-  p = {'"+p', "[p]aste from global clipboard" },
-  y = {'"+y', "[y]ank to global clipboard" },
+  p = { '"+p', "[p]aste from global clipboard" },
+  y = { '"+y', "[y]ank to global clipboard" },
 
   f = {
     name = "find",
@@ -600,23 +607,23 @@ wk.register({
     o = { require("aerial").toggle, "Toggle [O]utline" },
     s = { require('telescope.builtin').lsp_document_symbols, "Search document [S]ymbols" },
     w = { require('telescope.builtin').lsp_dynamic_workspace_symbols, "Search [W]orkspace symbols" },
-    i = { function () vim.lsp.inlay_hint(0, nil) end, "toggle [i]nlay hints"}
+    i = { function() vim.lsp.inlay_hint(0, nil) end, "toggle [i]nlay hints" }
   },
 
   -- git related key bindings
   g = {
     name = "git",
-    g = { "<cmd> Git <cr>", "[G]it"},
-    b = { "<cmd> Git blame <cr>", "git [B]lame"},
-    f = {require('telescope.builtin').git_files, 'Search git [F]iles' },
-    s = {require('telescope.builtin').git_status, 'Search git [S]tatus' },
+    g = { "<cmd> Git <cr>", "[G]it" },
+    b = { "<cmd> Git blame <cr>", "git [B]lame" },
+    f = { require('telescope.builtin').git_files, 'Search git [F]iles' },
+    s = { require('telescope.builtin').git_status, 'Search git [S]tatus' },
   },
 
   -- wiki related key bindings
   {
     w = {
       name = "wiki",
-      ["<space>"] = {name = "Diary note"}
+      ["<space>"] = { name = "Diary note" }
     }
   },
   {
@@ -624,6 +631,16 @@ wk.register({
   },
   d = {
     d = { "<cmd> lua vim.diagnostic.open_float() <CR>", "?   toggles local troubleshoot" }
+  },
+  {
+    z = { require('telekasten').panel, "Telekasten Panel" }
   }
 
 }, { prefix = "<leader>" })
+
+local group = vim.api.nvim_create_augroup("Markdown Wrap Settings", { clear = true })
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = { '*.md' },
+  group = group,
+  command = 'setlocal linebreak'
+})
