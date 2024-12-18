@@ -51,10 +51,10 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+w kill
 bindsym $mod+space exec "rofi -show run"
 bindsym $mod+Control+k exec "rofi -show window"
-bindsym $mod+Mod1+Control+l exec "i3lock -c 000000 && systemctl suspend"
+bindsym $mod+Mod1+Control+l exec "i3lock -c 444444 && systemctl suspend"
 bindsym $mod+m fullscreen toggle
 bindsym $mod+bracketleft move workspace to output right
-bindsym $mod+bracketright move workspace to output right
+bindsym $mod+bracketright move workspace to output next
 
 # split in horizontal orientation
 bindsym $mod+Control+h split h
