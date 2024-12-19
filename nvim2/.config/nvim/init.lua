@@ -1,3 +1,7 @@
+-- Line numbers
+
+vim.wo.relativenumber = true
+
 -- Leader key: space
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -16,6 +20,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup {
   require 'plugins.theme',
+  require 'plugins.lsp',
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
