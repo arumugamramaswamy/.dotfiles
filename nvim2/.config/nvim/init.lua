@@ -21,6 +21,51 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup {
   require 'plugins.theme',
   require 'plugins.lsp',
+  require 'plugins.orgmode',
+
+  -- help remembering key bindings
+  { 'folke/which-key.nvim',  opts = {} },
+
+  -- Fuzzy Finder (files, lsp, etc)
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+      -- Only load if `make` is available. Make sure you have the system
+      -- requirements installed.
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        -- NOTE: If you are having trouble with this installation,
+        --       refer to the README for telescope-fzf-native for more instructions.
+        build = 'make',
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
+    },
+  },
+
+  ------ tree
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = {
+        'nvim-tree/nvim-web-devicons', -- Optional, for file icons
+    },
+    config = function()
+      require('nvim-tree').setup({
+        view = {
+          width = 60,
+          side = "right",
+        },
+      })
+
+      -- TODO: explore nvim tree configs
+      vim.keymap.set('n', '<C-x><C-f>', ':NvimTreeToggle<CR>', { silent = true })
+    end
+  },
+  ------
 
   ------------- Buffer editting related configs - extract later
   -- Detect tabstop and shiftwidth automatically
@@ -174,3 +219,54 @@ require('lazy').setup {
 
 -- sync clipboard with OS
 vim.o.clipboard = 'unnamedplus'
+
+-- Set highlight on search
+vim.o.hlsearch = false
+
+
+
+-- Define the keybindings you want to learn/ be reminded of
+local keybindings = {
+  {'gd', 'Goto Definition'},
+  {'gr', 'Goto References'},
+  {'gI', 'Goto Implementation'},
+  {'<leader>ds', 'Document Symbols'},
+  {'<leader>ff', 'Find Files'},
+  {'<leader>fg', 'Live Grep'},
+  -- Add more keybindings as you need
+}
+
+-- Function to show keybindings in a floating window
+function show_keybindings()
+  -- Create a buffer to display the keybindings
+  local buf = vim.api.nvim_create_buf(false, true)  -- no file, listed
+
+  -- Set the keybindings text
+  local lines = {}
+  for _, kb in ipairs(keybindings) do
+    table.insert(lines, string.format("%s  -  %s", kb[1], kb[2]))
+  end
+
+  -- Set the buffer content
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+
+  -- Set floating window properties
+  local width = 40  -- Set width of the floating window
+  local height = #lines + 2  -- Height based on the number of lines
+  local col = vim.o.columns - width - 2  -- Position from the right
+  local row = vim.o.lines - height
+
+  -- Open the floating window
+  vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = 'minimal',
+    border = 'rounded',
+  })
+end
+
+-- Bind a key (e.g., <leader>kb) to show the keybindings window
+vim.api.nvim_set_keymap('n', '<leader>kb', ':lua show_keybindings()<CR>', { noremap = true, silent = true })

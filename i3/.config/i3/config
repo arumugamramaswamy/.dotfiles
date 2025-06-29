@@ -91,6 +91,9 @@ bindsym $mod+e layout toggle split
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
+# toggle sticky
+bindsym $mod+Shift+s sticky toggle
+
 # focus the parent container
 bindsym $mod+a focus parent
 
