@@ -19,6 +19,8 @@ font pango:monospace 8
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
+focus_follows_mouse no
+
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
@@ -170,6 +172,17 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
+
+mode "move" {
+        bindsym h move left 120 px
+        bindsym j move down 120 px
+        bindsym k move up 120 px
+        bindsym l move right 120 px
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Escape mode "default"
+}
+bindsym $mod+q mode "move"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)

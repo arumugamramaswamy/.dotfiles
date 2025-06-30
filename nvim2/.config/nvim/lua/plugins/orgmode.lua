@@ -3,10 +3,29 @@ return {
   event = 'VeryLazy',
   ft = { 'org' },
   config = function()
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'org',
+      callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+        vim.opt_local.breakindent = true
+        vim.opt_local.showbreak = '↪ '
+
+        -- Make scrolling respect wrapped lines
+        vim.keymap.set('n', 'j', 'gj', { buffer = true })
+        vim.keymap.set('n', 'k', 'gk', { buffer = true })
+        vim.keymap.set('v', 'j', 'gj', { buffer = true })
+        vim.keymap.set('v', 'k', 'gk', { buffer = true })
+      end,
+    })
+
     -- Setup orgmode
-    require('orgmode').setup({
+    require('orgmode').setup {
       org_agenda_files = '~/orgfiles/*.org',
       org_default_notes_file = '~/orgfiles/refile.org',
+      org_archive_location = '~/orgfiles/archive.org',
 
       org_use_tag_inheritance = false,
       org_startup_folded = 'showeverything',
@@ -15,8 +34,8 @@ return {
         org_return_uses_meta_return = true, -- this is great
 
         capture = {
-          org_capture_kill = '<C-g>' -- easy abort
-        }
+          org_capture_kill = '<C-g>', -- easy abort
+        },
       },
 
       org_agenda_custom_commands = {
@@ -50,13 +69,12 @@ return {
               org_agenda_overriding_header = 'low priority todos',
               org_agenda_todo_ignore_deadlines = 'far',
             },
-          }
+          },
         },
-      }
+      },
 
       -- TODO: impl better capture prompts (https://nvim-orgmode.github.io/configuration#org_capture_templates)
       --
-    })
-
+    }
   end,
 }
