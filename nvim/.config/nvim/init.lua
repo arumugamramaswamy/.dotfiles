@@ -97,25 +97,6 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons"
     },
   },
-  {
-    "jackMort/ChatGPT.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("chatgpt").setup({
-        edit_with_instructions = {
-          keymaps = {
-            use_output_as_input = "<C-e>",
-          },
-        },
-      }
-      )
-    end,
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim"
-    }
-  },
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
@@ -124,7 +105,83 @@ require('lazy').setup({
     'renerocksai/telekasten.nvim',
     dependencies = { 'nvim-telescope/telescope.nvim' }
   },
+  -- START: nvim orgmode
+  --
+  {
+    'nvim-orgmode/orgmode',
+    event = 'VeryLazy',
+    ft = { 'org' },
+    config = function()
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'org',
+        callback = function()
+          vim.opt_local.number = false
+          vim.opt_local.relativenumber = false
+          vim.opt_local.wrap = true
+          vim.opt_local.linebreak = true
+        end,
+      })
 
+      -- Setup orgmode
+      require('orgmode').setup({
+        org_agenda_files = '~/orgfiles/*.org',
+        org_default_notes_file = '~/orgfiles/refile.org',
+
+        org_use_tag_inheritance = false,
+        org_startup_folded = 'showeverything',
+
+        mappings = {
+          org_return_uses_meta_return = true, -- this is great
+
+          capture = {
+            org_capture_kill = '<C-g>' -- easy abort
+          }
+        },
+
+        org_agenda_custom_commands = {
+          -- "c" is the shortcut that will be used in the prompt
+          c = {
+            description = 'Combined view', -- Description shown in the prompt for the shortcut
+
+            -- TODO: refine this workflow
+            -- -> when do we set priority?
+            types = {
+              {
+                type = 'tags_todo', -- Type can be agenda | tags | tags_todo
+                match = '+PRIORITY="A"', --Same as providing a "Match:" for tags view <leader>oa + m, See: https://orgmode.org/manual/Matching-tags-and-properties.html
+                org_agenda_overriding_header = 'High priority todos',
+                org_agenda_todo_ignore_deadlines = 'far', -- Ignore all deadlines that are too far in future (over org_deadline_warning_days). Possible values: all | near | far | past | future
+              },
+              {
+                type = 'tags',
+                match = 'ONGOING',
+                org_agenda_overriding_header = 'Ongoing stuff',
+              },
+              {
+                type = 'tags_todo',
+                match = '-PRIORITY="A"-PRIORITY="C"',
+                org_agenda_overriding_header = 'todos',
+                org_agenda_todo_ignore_deadlines = 'far',
+              },
+              {
+                type = 'tags_todo',
+                match = '+PRIORITY="C"',
+                org_agenda_overriding_header = 'low priority todos',
+                org_agenda_todo_ignore_deadlines = 'far',
+              },
+            }
+          },
+        }
+
+        -- TODO: impl better capture prompts (https://nvim-orgmode.github.io/configuration#org_capture_templates)
+        --
+      })
+
+    end,
+    },
+  -- END: nvim orgmode
+
+  'OmniSharp/omnisharp-vim',
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -245,7 +302,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  require 'kickstart.plugins.autoformat',
+  -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -337,6 +394,14 @@ require('telescope').setup {
     },
   },
 }
+-- Set up filetype associations for C++ files
+vim.filetype.add({
+  extension = {
+    cpp = "cpp",   -- Associate .cpp with C++ filetype
+    hpp = "cpp",   -- Associate .hpp with C++ filetype
+    tpp = "cpp",  -- Associate .tpp with plain text to disable C++ highlighting
+  },
+})
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
@@ -499,7 +564,7 @@ local servers = {
         }
       }
     }
-  },
+  }
 }
 
 -- Setup neovim lua configuration
@@ -607,7 +672,7 @@ wk.register({
     o = { require("aerial").toggle, "Toggle [O]utline" },
     s = { require('telescope.builtin').lsp_document_symbols, "Search document [S]ymbols" },
     w = { require('telescope.builtin').lsp_dynamic_workspace_symbols, "Search [W]orkspace symbols" },
-    i = { function() vim.lsp.inlay_hint(0, nil) end, "toggle [i]nlay hints" }
+    i = { function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, "toggle [i]nlay hints" }
   },
 
   -- git related key bindings
