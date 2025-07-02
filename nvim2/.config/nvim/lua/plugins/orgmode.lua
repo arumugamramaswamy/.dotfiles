@@ -29,7 +29,31 @@ return {
 
       org_use_tag_inheritance = false,
       org_startup_folded = 'showeverything',
+      win_split_mode = function(name)
+        local bufnr = vim.api.nvim_create_buf(false, false)
+        vim.api.nvim_buf_set_name(bufnr, name)
 
+        if name == 'orgagenda' then
+          vim.api.nvim_set_current_buf(bufnr)
+        else
+          -- Open centered floating window for capture buffers
+          local fill = 0.8
+          local width = math.floor((vim.o.columns * fill))
+          local height = math.floor((vim.o.lines * fill))
+          local row = math.floor((((vim.o.lines - height) / 2) - 1))
+          local col = math.floor(((vim.o.columns - width) / 2))
+
+          vim.api.nvim_open_win(bufnr, true, {
+            relative = 'editor',
+            width = width,
+            height = height,
+            row = row,
+            col = col,
+            style = 'minimal',
+            border = 'rounded',
+          })
+        end
+      end,
       mappings = {
         org_return_uses_meta_return = true, -- this is great
 
