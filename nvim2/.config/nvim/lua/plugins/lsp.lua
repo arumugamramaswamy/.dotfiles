@@ -18,8 +18,11 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('<leader>li', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end, 'Togg[L]e [I]nlay Hints')
+  nmap('<leader>li', function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+  end, 'Togg[L]e [I]nlay Hints')
 
+  nmap('<leader>lo', require('aerial').toggle, 'Togg[L]e [O]utline')
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -40,18 +43,37 @@ local on_attach = function(_, bufnr)
 end
 
 return {
-  {'neovim/nvim-lspconfig'},
+  {
+    'stevearc/aerial.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons',
+    },
+  },
+  { 'neovim/nvim-lspconfig' },
   {
     'williamboman/mason.nvim',
     config = function()
       require('mason').setup()
       local lspconfig = require 'lspconfig'
       lspconfig.rust_analyzer.setup {
-        on_attach=on_attach
+        on_attach = on_attach,
       }
       lspconfig.lua_ls.setup {}
       lspconfig.clangd.setup {
-        on_attach=on_attach
+        filetypes = {
+          'cpp',
+          'c',
+          'hpp',
+          'h',
+          'tpp',
+        },
+        on_attach = on_attach,
+      }
+      lspconfig.pylsp.setup {
+        on_attach = on_attach,
       }
     end,
   },

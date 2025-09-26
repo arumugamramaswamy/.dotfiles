@@ -78,6 +78,23 @@ return {
             },
             {
               type = 'tags',
+              match = 'CURRENT',
+              org_agenda_overriding_header = 'Current',
+            },
+            {
+              type = 'tags',
+              match = 'REVIEW',
+              org_agenda_overriding_header = 'In Review',
+              org_agenda_remove_tags = true,
+            },
+            {
+              type = 'tags',
+              match = 'TESTING',
+              org_agenda_overriding_header = 'Testing',
+              org_agenda_remove_tags = true,
+            },
+            {
+              type = 'tags',
               match = 'ONGOING',
               org_agenda_overriding_header = 'Ongoing stuff',
             },
